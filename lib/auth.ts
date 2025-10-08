@@ -31,6 +31,7 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
+          // Return minimal user data in JWT to keep token size small
           return {
             id: user.id,
             email: user.email,
@@ -44,7 +45,8 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days - reasonable balance between convenience and security
   },
   secret: process.env.NEXTAUTH_SECRET || 'your-secret-key-here',
   debug: process.env.NODE_ENV === 'development',

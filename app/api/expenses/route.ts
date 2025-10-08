@@ -5,25 +5,30 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(request: Request) {
   try {
+    // Server-side session check - more secure than client-only auth
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Support flexible filtering via query params for better UX
     const { searchParams } = new URL(request.url)
     const limit = searchParams.get('limit')
     const category = searchParams.get('category')
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
 
+    // Build dynamic where clause - only filter by user's data for security
     const where: any = {
       userId: session.user.id
     }
 
+    // Optional category filter - useful for focused views
     if (category && category !== 'All') {
       where.category = category
     }
 
+    // Date range filtering for reports and trend analysis
     if (startDate) {
       where.date = {
         gte: new Date(startDate)
@@ -59,13 +64,15 @@ export async function POST(request: Request) {
 
     const { amount, description, category, date } = await request.json()
 
+    // Create expense with server-side user ID injection
+    // This prevents users from creating expenses for other accounts
     const expense = await prisma.expense.create({
       data: {
         amount: parseFloat(amount),
         description,
         category,
         date: new Date(date),
-        userId: session.user.id
+        userId: session.user.id // Force userId from session, not from client
       }
     })
 

@@ -2,6 +2,8 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 
+// Custom color palette for better visual hierarchy
+// Used colors that are distinct enough for accessibility
 const COLORS = {
   Food: '#8884d8',
   Transportation: '#82ca9d',
@@ -17,6 +19,7 @@ interface ExpenseChartProps {
 }
 
 export function ExpenseChart({ data }: ExpenseChartProps) {
+  // Transform data and assign colors - fallback to "Other" for unknown categories
   const chartData = data.map(item => ({
     name: item.category,
     value: item.amount,
@@ -34,7 +37,9 @@ export function ExpenseChart({ data }: ExpenseChartProps) {
             outerRadius={80}
             fill="#8884d8"
             dataKey="value"
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            label={({ name, percent }) =>
+              `${name} ${percent !== undefined ? (percent * 100).toFixed(0) : '0'}%`
+            }
           >
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />

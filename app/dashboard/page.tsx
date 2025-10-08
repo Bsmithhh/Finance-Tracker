@@ -24,12 +24,15 @@ export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Redirect unauthenticated users immediately - better UX than showing error
   useEffect(() => {
     if (status === 'unauthenticated') {
       redirect('/auth/signin')
     }
   }, [status])
 
+  // Fetch dashboard data only after session is confirmed
+  // This prevents unnecessary API calls during initial auth check
   useEffect(() => {
     if (session?.user?.id) {
       fetchDashboardData()
@@ -44,8 +47,11 @@ export default function DashboardPage() {
         setData(dashboardData)
       }
     } catch (error) {
+      // In production, I'd want to show a user-friendly error toast here
+      // For now, logging helps with debugging
       console.error('Error fetching dashboard data:', error)
     } finally {
+      // Always stop loading indicator, even if fetch fails
       setLoading(false)
     }
   }
@@ -65,7 +71,7 @@ export default function DashboardPage() {
         <p className="text-gray-600">Welcome back! Here's your financial overview.</p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Overview stats - responsive grid that stacks on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total Balance"
@@ -93,7 +99,7 @@ export default function DashboardPage() {
         />
       </div>
 
-      {/* Charts Grid */}
+      {/* Visual analytics - side by side on larger screens */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>

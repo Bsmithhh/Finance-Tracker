@@ -7,8 +7,10 @@ interface StatsCardProps {
 }
 
 export function StatsCard({ title, value, description, trend, icon }: StatsCardProps) {
+  // Added subtle hover effect to make the dashboard feel more interactive
+  // The transition makes it feel polished without being distracting
   return (
-    <div className="bg-card rounded-xl border p-6 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-card rounded-xl border p-6 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
