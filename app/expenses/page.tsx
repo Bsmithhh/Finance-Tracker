@@ -16,13 +16,23 @@ import { useToast } from '@/hooks/use-toast'
 
 const CATEGORIES = ['All', 'Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping', 'Healthcare', 'Other']
 
+interface Expense {
+  id: string
+  amount: number
+  description: string
+  category: string
+  date: string
+  createdAt: string
+  updatedAt: string
+}
+
 export default function ExpensesPage() {
   const { data: session, status } = useSession()
   const { toast } = useToast()
-  const [expenses, setExpenses] = useState([])
+  const [expenses, setExpenses] = useState<Expense[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [editingExpense, setEditingExpense] = useState(null)
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
   const [filters, setFilters] = useState({
     category: 'All',
     startDate: '',
@@ -65,7 +75,7 @@ export default function ExpensesPage() {
     }
   }
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: Partial<Expense>) => {
     try {
       const url = editingExpense ? `/api/expenses/${editingExpense.id}` : '/api/expenses'
       const method = editingExpense ? 'PUT' : 'POST'
@@ -97,7 +107,7 @@ export default function ExpensesPage() {
     }
   }
 
-  const handleEdit = (expense: any) => {
+  const handleEdit = (expense: Expense) => {
     setEditingExpense(expense)
     setShowForm(true)
   }
