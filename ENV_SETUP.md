@@ -61,8 +61,11 @@ You have several options:
 3. **Supabase** (Free PostgreSQL)
    - Sign up at https://supabase.com
    - Create a new project
-   - Go to Settings > Database
-   - Copy the connection string (change mode to "Session" for better compatibility)
+   - Go to Settings > Database > Connection String
+   - **Important**: You need TWO connection strings:
+     - **Transaction mode** (port 5432) - For migrations (set as `DIRECT_DATABASE_URL`)
+     - **Session mode** (port 6543) - For runtime queries (set as `DATABASE_URL`)
+   - Copy both connection strings
 
 4. **Railway** (PostgreSQL with free tier)
    - Sign up at https://railway.app
@@ -78,6 +81,7 @@ You have several options:
    | Name | Value | Environment |
    |------|-------|-------------|
    | `DATABASE_URL` | Your database connection string | Production, Preview, Development |
+   | `DIRECT_DATABASE_URL` | Direct connection URL (Supabase only, port 5432) | Production, Preview, Development |
    | `NEXTAUTH_SECRET` | Your generated secret | Production, Preview, Development |
    | `NEXTAUTH_URL` | Your production URL (optional) | Production |
 
