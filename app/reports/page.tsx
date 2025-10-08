@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { BarChart3, TrendingUp, TrendingDown, DollarSign, Calendar } from 'lucide-react'
@@ -37,15 +37,7 @@ export default function ReportsPage() {
   const [error, setError] = useState('')
   const [timeframe, setTimeframe] = useState('30')
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin')
-    } else if (status === 'authenticated') {
-      fetchData()
-    }
-  }, [status, router, timeframe])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [expensesResponse, incomesResponse] = await Promise.all([
         fetch('/api/expenses'),
@@ -75,7 +67,15 @@ export default function ReportsPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [timeframe])
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin')
+    } else if (status === 'authenticated') {
+      fetchData()
+    }
+  }, [status, router, fetchData])
 
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0)
   const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0)
