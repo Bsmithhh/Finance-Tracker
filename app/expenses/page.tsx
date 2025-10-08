@@ -13,18 +13,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loading } from '@/components/ui/loading'
 import { useToast } from '@/hooks/use-toast'
+import { Expense } from '@/types/expense'
 
 const CATEGORIES = ['All', 'Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping', 'Healthcare', 'Other']
-
-interface Expense {
-  id: string
-  amount: number
-  description: string
-  category: string
-  date: string
-  createdAt: string
-  updatedAt: string
-}
 
 export default function ExpensesPage() {
   const { data: session, status } = useSession()

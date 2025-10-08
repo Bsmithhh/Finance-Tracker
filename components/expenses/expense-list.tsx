@@ -16,15 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-
-interface Expense {
-  id: string
-  amount: number
-  description: string
-  category: string
-  date: string
-  createdAt: string
-}
+import { Expense } from '@/types/expense'
 
 interface ExpenseListProps {
   expenses: Expense[]
